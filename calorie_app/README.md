@@ -8,38 +8,38 @@ The introduction of the Software Mini Project is the following: to create a mobi
 It calculates the calorie content through scanning product barcodes and using a USDA/FDA RESTful API.
  
 While this project is not graded to completetion, here are the expected requirements:
-####Backend service
+#### Backend service
 1. REST Service to return calories of a recipe based on
 2. Barcodes of ingredients, images of ingredients, and/or name of ingredient
 3. Servings per item in the call
-####Application will calculate calories of a recipe or food you eat
+#### Application will calculate calories of a recipe or food you eat
 4. Take a picture
 5. Read barcodes of products
 6. Ask the user for amount of servings
 7. Keeps track of all users recipes and daily food intake
 8. Use Gmail for authentication
-####Use FDA API to get nutrition information to get nutrition facts
+#### Use FDA API to get nutrition information to get nutrition facts
 * Study them well
 * Build test examples
 
-##How to run this app 
+## How to run this app 
 (to be completed)
 
-##Sprint Log
+## Sprint Log
 
-###Sprint 1
+### Sprint 1
 Plans for the SPRINT week of 9/7:
 
-####Tasks for both of us
+#### Tasks for both of us
 -Figure out how layouts/widgets work in flutter
 -Finish the tutorial/codelab on the flutter site
 -Understand how a RESTful API works
 
-####Tasks to be completed:
+#### Tasks to be completed:
 -Be able to scan barcodes with the device camera
 -Pull information from the barcode
 -Start firebase for the backend
 
-###Sprint 2
+### Sprint 2
 (to be completed)
 
