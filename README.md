@@ -31,15 +31,22 @@ While this project is not graded to completetion, here are the expected requirem
 Plans for the SPRINT week of 9/7:
 
 #### Tasks for both of us
--Figure out how layouts/widgets work in flutter
--Finish the tutorial/codelab on the flutter site
--Understand how a RESTful API works
+- Figure out how layouts/widgets work in flutter (completed)
+- Finish the tutorial/codelab on the flutter site (completed)
+- Understand how a RESTful API works (completed)
 
 #### Tasks to be completed:
--Be able to scan barcodes with the device camera
--Pull information from the barcode
--Start firebase for the backend
+- Be able to scan barcodes with the device camera (completed)
+- Pull information from the barcode (completed)
+- Start firebase for the backend (not completed)
 
 ### Sprint 2
-(to be completed)
+Last week of the project, plans for week of 9/13
 
+#### Tasks to be completed
+- Connect API to Camera + retrieve food data
+- Set up Firebase backend for authentication
+
+## Resources Used
+Plugin + code examples: https://pub.dev/packages/qr_code_scanner
+Other example of QR/barcode scanning: https://heartbeat.fritz.ai/scan-barcodes-in-flutter-using-firebases-ml-kit-b5b014a67ed1
