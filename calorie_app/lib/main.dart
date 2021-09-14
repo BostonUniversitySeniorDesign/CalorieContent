@@ -13,27 +13,141 @@ class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Flutter Demo Home Page')),
+      appBar: AppBar(title: Text('Demo Recipe App')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QRViewExample(),
-            ));
-          },
-          child: Text('qrView'),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 120.0,
+            width: 120.0,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/weighing.png'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.blueAccent,
+                  width: 6,
+                )),
+          ),
+          Text(
+            'Welcome! Get Started by scanning a barcode with the camera button!',
+          ),
+        ],
+      )),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: null,
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                // Update the state of the app
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHome()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Favorites'),
+              onTap: () {
+                // Update the state of the app
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SavedPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => QRScan(),
+          ));
+        },
+        child: Icon(
+          Icons.camera,
+          color: Colors.white,
+          semanticLabel: 'scan a barcode',
         ),
       ),
     );
   }
 }
 
-class QRViewExample extends StatefulWidget {
+class SavedPage extends StatelessWidget {
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Saved Foods"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: null,
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                // Update the state of the app
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHome()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Favorites'),
+              onTap: () {
+                // Update the state of the app
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SavedPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _QRViewExampleState extends State<QRViewExample> {
+/* class ItemPage extends StatefulWidget {
+  const ItemPage({Key? key}) : super(key: key);
+
+  @override
+  _ItemPageState createState() => _ItemPageState();
+} */
+
+/* class _ItemPageState extends State<ItemPage> {
+  void _pushedSaved() {}
+} */
+
+class QRScan extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _QRScanState();
+}
+
+class _QRScanState extends State<QRScan> {
+  //Scanned Barcodes and QRCodes return the type BARCODE which contains a string class
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -127,7 +241,15 @@ class _QRViewExampleState extends State<QRViewExample> {
                           },
                           child: Text('resume', style: TextStyle(fontSize: 20)),
                         ),
-                      )
+                      ),
+                      Container(
+                          margin: EdgeInsets.all(8),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Back'),
+                          ))
                     ],
                   ),
                 ],
