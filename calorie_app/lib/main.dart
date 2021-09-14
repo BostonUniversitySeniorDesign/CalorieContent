@@ -63,7 +63,7 @@ class MyHome extends StatelessWidget {
                 // Update the state of the app
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => SavedPage()),
+                  MaterialPageRoute(builder: (context) => RecipePage()),
                 );
               },
             ),
@@ -85,7 +85,8 @@ class MyHome extends StatelessWidget {
     );
   }
 }
-
+//commenting this "SAVEDPAGE" route out in case it will be needed later
+/*
 class SavedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -128,8 +129,60 @@ class SavedPage extends StatelessWidget {
       ),
     );
   }
+} */
+
+class RecipePage extends StatefulWidget {
+  const RecipePage({Key? key}) : super(key: key);
+
+  @override
+  _RecipePageState createState() => _RecipePageState();
 }
 
+class _RecipePageState extends State<RecipePage> {
+  final _biggerFont = const TextStyle(fontSize: 20.0);
+  void _pushedSaved() {}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Saved Foods"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: null,
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                // Update the state of the app
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHome()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Favorites'),
+              onTap: () {
+                // Update the state of the app
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => RecipePage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 /* class ItemPage extends StatefulWidget {
   const ItemPage({Key? key}) : super(key: key);
 
