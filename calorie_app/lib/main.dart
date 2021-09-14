@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -76,6 +75,8 @@ class MyHome extends StatelessWidget {
             builder: (context) => QRScan(),
           ));
         },
+        //add a navigator method that pushes the barcode object to the router
+        //add a snackbar "code scanned!" message??
         child: Icon(
           Icons.camera,
           color: Colors.white,
@@ -132,20 +133,24 @@ class SavedPage extends StatelessWidget {
 } */
 
 class RecipePage extends StatefulWidget {
-  const RecipePage({Key? key}) : super(key: key);
+  const RecipePage({Key? key, barcode}) : super(key: key);
 
   @override
   _RecipePageState createState() => _RecipePageState();
 }
 
 class _RecipePageState extends State<RecipePage> {
-  final _biggerFont = const TextStyle(fontSize: 20.0);
-  void _pushedSaved() {}
+  Barcode? barcode;
+
+  //final _biggerFont = const TextStyle(fontSize: 20.0);
+  //void _pushedSaved() {} //function will push saved FoodItems to a dynamic list
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Saved Foods"),
+        //this line throws unexpected null value
+        title: Text('Recipe Page'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -193,6 +198,51 @@ class _RecipePageState extends State<RecipePage> {
 /* class _ItemPageState extends State<ItemPage> {
   void _pushedSaved() {}
 } */
+
+//Class to contain the "Food Item"
+class Foods {
+  String name = '';
+  int upc = 0;
+  List<FoodNutrients> foodNutrient = null as List<FoodNutrients>;
+
+  Foods({
+    required this.name,
+    required this.upc,
+    required this.foodNutrient,
+  });
+
+  factory Foods.fromJson(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['images'] as List;
+    List<FoodNutrients> nutrientsList =
+        list.map((i) => FoodNutrients.fromJson(i)).toList();
+
+    return Foods(
+      name: parsedJson['description'],
+      upc: parsedJson['gtinUpc'],
+      foodNutrient: parsedJson['foodNutrients'],
+    );
+  }
+}
+
+//Class to help with the Nested JSON parsing
+class FoodNutrients {
+  int nutrientID = 0;
+  String nutrientName = '';
+  int nutrientValue = 0;
+
+  FoodNutrients({
+    required this.nutrientID,
+    required this.nutrientName,
+    required this.nutrientValue,
+  });
+
+  factory FoodNutrients.fromJson(Map<String, dynamic> parsedJson) {
+    return FoodNutrients(
+        nutrientID: parsedJson['nutrientId'],
+        nutrientName: parsedJson['nutrientName'],
+        nutrientValue: parsedJson['nutrientNumber']);
+  }
+}
 
 class QRScan extends StatefulWidget {
   @override
@@ -343,6 +393,13 @@ class _QRScanState extends State<QRScan> {
       setState(() {
         result = scanData;
       });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Barcode Scanned')));
+
+      Navigator.pushReplacement(
+        (context),
+        MaterialPageRoute(builder: (context) => RecipePage()),
+      );
     });
   }
 
