@@ -6,8 +6,7 @@ import 'recipePage.dart';
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-import 'dart:developer';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as dotenv;
 
 class FoodItemPage extends StatefulWidget {
   final String? upcCode;
@@ -19,14 +18,13 @@ class FoodItemPage extends StatefulWidget {
 }
 
 class _FoodItemPageState extends State<FoodItemPage> {
-  late Future<FoodSuper> futureFoods;
+  late Future<Foods> futureFoods;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //this line throws unexpected null value
-        title: Text(this.widget.upcCode!),
+        title: Text("Food Item Page"),
       ),
       drawer: _buildDrawer(context),
       body: _buildFoodItem(context),
@@ -69,35 +67,41 @@ class _FoodItemPageState extends State<FoodItemPage> {
     );
   }
 
-  //parse JSON and flesh out clases here?
-  Future<FoodSuper> fetchFood() async {
-    await DotEnv.load(fileName: ".env");
-    var apiKey = DotEnv.env['SUPER_SECRET_API_KEY'];
-
-    final response = await http.get(Uri.parse(
-        'https://api.nal.usda.gov/fdc/v1/food/' +
-            this.widget.upcCode! +
-            apiKey!));
-
-    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
-    log(responseJson.toString());
-    return FoodSuper.fromJson(responseJson);
-  }
-
   void initState() {
     super.initState();
     futureFoods = fetchFood();
+  }
+
+  //parse JSON and flesh out clases here?
+  Future<Foods> fetchFood() async {
+    await dotenv.load(fileName: ".env");
+    String? apiKey = dotenv.env['SUPER_SECRET_API_KEY'];
+
+    final response = await http.get(Uri.parse(
+        'https://api.nal.usda.gov/fdc/v1/foods/search?api_key=' +
+            apiKey! +
+            '&query=' +
+            this.widget.upcCode!));
+
+    final parsedJson = jsonDecode(response.body);
+    print(parsedJson);
+    return Foods.fromJson(parsedJson);
   }
 
   Widget _buildFoodItem(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(children: [
-          FutureBuilder<FoodSuper>(
+          FutureBuilder<Foods>(
             future: futureFoods,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data!.foods.toString());
+                return Column(children: [
+                  Text('Name:' + snapshot.data!.description),
+                  Text('UPC:' + snapshot.data!.gtinUpc),
+                  Text('Caloric Value:' + '${snapshot.data!.calories}'),
+                  Text('FDC ID:' + '${snapshot.data!.fdcId}'),
+                ]);
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -108,63 +112,30 @@ class _FoodItemPageState extends State<FoodItemPage> {
   }
 }
 
-//Class to contain the "Food Item"
-class FoodSuper {
-  List<Foods> foods;
-
-  FoodSuper({required this.foods});
-
-  factory FoodSuper.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['foods'] as List;
-
-    List<Foods> foodsList = list.map((i) => Foods.fromJson(i)).toList();
-
-    return FoodSuper(
-      foods: foodsList,
-    );
-  }
-}
-
 class Foods {
-  String description;
-  String gtinUpc;
-  List<FoodNutrients> foodNutrients;
+  final int fdcId;
+  final String description;
+  final String gtinUpc;
+  final int calories;
 
-  Foods(
-      {required this.description,
-      required this.gtinUpc,
-      required this.foodNutrients});
-
-  factory Foods.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['foodNutrients'] as List;
-
-    List<FoodNutrients> foodNutrientsList =
-        list.map((i) => FoodNutrients.fromJson(i)).toList();
-
-    return Foods(
-      description: parsedJson['id'],
-      gtinUpc: parsedJson['imageName'],
-      foodNutrients: foodNutrientsList,
-    );
-  }
-}
-
-//Class to help with the Nested JSON parsing
-class FoodNutrients {
-  int nutrientID = 0;
-  String nutrientName = '';
-  double nutrientValue = 0;
-
-  FoodNutrients({
-    required this.nutrientID,
-    required this.nutrientName,
-    required this.nutrientValue,
+  Foods({
+    required this.fdcId,
+    required this.description,
+    required this.gtinUpc,
+    required this.calories,
   });
 
-  factory FoodNutrients.fromJson(Map<String, dynamic> parsedJson) {
-    return FoodNutrients(
-        nutrientID: parsedJson['nutrientId'],
-        nutrientName: parsedJson['nutrientName'],
-        nutrientValue: parsedJson['nutrientNumber']);
+  factory Foods.fromJson(Map<String, dynamic> parsedJson) {
+    final description = parsedJson['foods'][0]['description'] as String;
+    final gtinUpc = parsedJson['foods'][0]['gtinUpc'] as String;
+    final fdcId = parsedJson['foods'][0]['fdcId'] as int;
+    final calories = parsedJson['foods'][0]['foodNutrients'][3]['value'] as int;
+
+    return Foods(
+      calories: calories,
+      fdcId: fdcId,
+      description: description,
+      gtinUpc: gtinUpc,
+    );
   }
 }
