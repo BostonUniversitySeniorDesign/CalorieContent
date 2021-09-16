@@ -3,40 +3,42 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'recipePage.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'dart:async' show Future;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart' as dotenv;
 
 class FoodItemPage extends StatefulWidget {
-  final Barcode? barcode;
+  final String? upcCode;
 
-  const FoodItemPage({Key? key, this.barcode}) : super(key: key);
+  const FoodItemPage({Key? key, this.upcCode}) : super(key: key);
 
   @override
   _FoodItemPageState createState() => _FoodItemPageState();
 }
 
 class _FoodItemPageState extends State<FoodItemPage> {
-  Barcode? barcode;
+  late Future<Foods> futureFoods;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //this line throws unexpected null value
-        title: Text('Recipe Page'),
+        title: Text("Food Item Page"),
       ),
-      drawer: _buildDrawer(),
-      body: _buildFoodItem(),
+      drawer: _buildDrawer(context),
+      body: _buildFoodItem(context),
     );
   }
 
-  Widget _buildDrawer() {
+  Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.red,
             ),
             child: null,
           ),
@@ -65,80 +67,75 @@ class _FoodItemPageState extends State<FoodItemPage> {
     );
   }
 
-  //make authenticated JSON request here
-  Widget _buildJsonRequest() {
-    return Container();
+  void initState() {
+    super.initState();
+    futureFoods = fetchFood();
   }
 
   //parse JSON and flesh out clases here?
-  Widget _buildFoodClasses() {
-    return Container();
+  Future<Foods> fetchFood() async {
+    await dotenv.load(fileName: ".env");
+    String? apiKey = dotenv.env['SUPER_SECRET_API_KEY'];
+
+    final response = await http.get(Uri.parse(
+        'https://api.nal.usda.gov/fdc/v1/foods/search?api_key=' +
+            apiKey! +
+            '&query=' +
+            this.widget.upcCode!));
+
+    final parsedJson = jsonDecode(response.body);
+    print(parsedJson);
+    return Foods.fromJson(parsedJson);
   }
 
-  Widget _buildFoodItem() {
+  Widget _buildFoodItem(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text("Name"),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text("UPC"),
-              ),
-              Expanded(
-                child: Text("Calories"),
-              ),
-            ],
-          )
+          FutureBuilder<Foods>(
+            future: futureFoods,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(children: [
+                  Text('Name:' + snapshot.data!.description),
+                  Text('UPC:' + snapshot.data!.gtinUpc),
+                  Text('Caloric Value:' + '${snapshot.data!.calories}'),
+                  Text('FDC ID:' + '${snapshot.data!.fdcId}'),
+                ]);
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
+          ),
         ]));
   }
 }
 
-//Class to contain the "Food Item"
 class Foods {
-  String name = '';
-  int upc = 0;
-  List<FoodNutrients> foodNutrient = null as List<FoodNutrients>;
+  final int fdcId;
+  final String description;
+  final String gtinUpc;
+  final int calories;
 
   Foods({
-    required this.name,
-    required this.upc,
-    required this.foodNutrient,
+    required this.fdcId,
+    required this.description,
+    required this.gtinUpc,
+    required this.calories,
   });
 
   factory Foods.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['images'] as List;
-    List<FoodNutrients> nutrientsList =
-        list.map((i) => FoodNutrients.fromJson(i)).toList();
+    final description = parsedJson['foods'][0]['description'] as String;
+    final gtinUpc = parsedJson['foods'][0]['gtinUpc'] as String;
+    final fdcId = parsedJson['foods'][0]['fdcId'] as int;
+    final calories = parsedJson['foods'][0]['foodNutrients'][3]['value'] as int;
 
     return Foods(
-      name: parsedJson['description'],
-      upc: parsedJson['gtinUpc'],
-      foodNutrient: parsedJson['foodNutrients'],
+      calories: calories,
+      fdcId: fdcId,
+      description: description,
+      gtinUpc: gtinUpc,
     );
-  }
-}
-
-//Class to help with the Nested JSON parsing
-class FoodNutrients {
-  int nutrientID = 0;
-  String nutrientName = '';
-  int nutrientValue = 0;
-
-  FoodNutrients({
-    required this.nutrientID,
-    required this.nutrientName,
-    required this.nutrientValue,
-  });
-
-  factory FoodNutrients.fromJson(Map<String, dynamic> parsedJson) {
-    return FoodNutrients(
-        nutrientID: parsedJson['nutrientId'],
-        nutrientName: parsedJson['nutrientName'],
-        nutrientValue: parsedJson['nutrientNumber']);
   }
 }
