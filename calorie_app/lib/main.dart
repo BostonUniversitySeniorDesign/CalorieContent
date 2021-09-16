@@ -2,8 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'recipePage.dart';
 import 'qrPage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
-void main() => runApp(MaterialApp(home: MyHome()));
+Future main() async {
+  await DotEnv.load(fileName: ".env");
+
+  runApp(MaterialApp(home: MyHome()));
+}
 
 class MyHome extends StatelessWidget {
   const MyHome({Key? key}) : super(key: key);

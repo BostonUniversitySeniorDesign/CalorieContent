@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'recipePage.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'dart:async' show Future;
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 class FoodItemPage extends StatefulWidget {
   final Barcode? barcode;
@@ -16,6 +21,7 @@ class FoodItemPage extends StatefulWidget {
 
 class _FoodItemPageState extends State<FoodItemPage> {
   Barcode? barcode;
+  late Future<Foods> futureFoods;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +71,24 @@ class _FoodItemPageState extends State<FoodItemPage> {
     );
   }
 
-  //make authenticated JSON request here
-  Widget _buildJsonRequest() {
-    return Container();
+  //parse JSON and flesh out clases here?
+  Future<Foods> fetchFood() async {
+    await DotEnv.load(fileName: ".env");
+
+    final response = await http.get(
+      Uri.parse('https://api.nal.usda.gov/fdc/v1/food/${barcode}?'),
+      headers: {
+        HttpHeaders.authorizationHeader: "${DotEnv.env}",
+      },
+    );
+
+    final responseJson = jsonDecode(response.body);
+    return Foods.fromJson(responseJson);
   }
 
-  //parse JSON and flesh out clases here?
-  Widget _buildFoodClasses() {
-    return Container();
+  void initState() {
+    super.initState();
+    futureFoods = fetchFood();
   }
 
   Widget _buildFoodItem() {
@@ -82,16 +98,17 @@ class _FoodItemPageState extends State<FoodItemPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: Text("Name"),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text("UPC"),
-              ),
-              Expanded(
-                child: Text("Calories"),
-              ),
+              FutureBuilder<Foods>(
+                future: futureFoods,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(snapshot.data!.name);
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                },
+              )
             ],
           )
         ]));
@@ -118,7 +135,7 @@ class Foods {
     return Foods(
       name: parsedJson['description'],
       upc: parsedJson['gtinUpc'],
-      foodNutrient: parsedJson['foodNutrients'],
+      foodNutrient: nutrientsList,
     );
   }
 }
