@@ -81,7 +81,39 @@ class _QRScanState extends State<QRScan> {
                                 }
                               },
                             )),
-                      )
+                      ),
+                      Container(
+                          margin: EdgeInsets.all(8),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              DateTime? lastScan;
+                              final currentScan = DateTime.now();
+                              String? upcCode = "";
+
+                              if (result?.code != null) {
+                                upcCode = result?.code;
+                              }
+
+                              if (lastScan == null ||
+                                  currentScan.difference(lastScan) >
+                                      const Duration(seconds: 1)) {
+                                lastScan = currentScan;
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Barcode Scanned!')));
+
+                                Navigator.push(
+                                  (context),
+                                  MaterialPageRoute(
+                                      builder: (context) => FoodItemPage(
+                                            upcCode: upcCode,
+                                          )),
+                                );
+                              }
+                            },
+                            child: Text("Save Recipe!"),
+                          ))
                     ],
                   ),
                   Row(
@@ -133,6 +165,7 @@ class _QRScanState extends State<QRScan> {
         : 300.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
+
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
@@ -147,7 +180,6 @@ class _QRScanState extends State<QRScan> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    DateTime? lastScan;
     setState(() {
       this.controller = controller;
     });
@@ -155,24 +187,29 @@ class _QRScanState extends State<QRScan> {
       setState(() {
         result = scanData;
       });
-
+      /*DateTime? lastScan;
       final currentScan = DateTime.now();
+      String? upcCode = "";
+
+      if (result?.code != null) {
+        upcCode = result?.code;
+      }
 
       if (lastScan == null ||
           currentScan.difference(lastScan!) > const Duration(seconds: 1)) {
         lastScan = currentScan;
 
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Barcode Scanned')));
+            .showSnackBar(SnackBar(content: Text('Barcode Scanned!')));
 
-        Navigator.pushReplacement(
+        Navigator.push(
           (context),
           MaterialPageRoute(
               builder: (_) => FoodItemPage(
-                    barcode: result,
+                    upcCode: upcCode,
                   )),
         );
-      }
+      }*/
     });
   }
 

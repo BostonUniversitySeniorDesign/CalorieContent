@@ -3,39 +3,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'recipePage.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:async' show Future;
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'dart:developer';
 
 class FoodItemPage extends StatefulWidget {
-  final Barcode? barcode;
+  final String? upcCode;
 
-  const FoodItemPage({Key? key, this.barcode}) : super(key: key);
+  const FoodItemPage({Key? key, this.upcCode}) : super(key: key);
 
   @override
   _FoodItemPageState createState() => _FoodItemPageState();
 }
 
 class _FoodItemPageState extends State<FoodItemPage> {
-  Barcode? barcode;
-  late Future<Foods> futureFoods;
+  late Future<FoodSuper> futureFoods;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         //this line throws unexpected null value
-        title: Text('Recipe Page'),
+        title: Text("Recipe Page"),
       ),
-      drawer: _buildDrawer(),
-      body: _buildFoodItem(),
+      drawer: _buildDrawer(context),
+      body: _buildFoodItem(context),
     );
   }
 
-  Widget _buildDrawer() {
+  Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -72,18 +70,18 @@ class _FoodItemPageState extends State<FoodItemPage> {
   }
 
   //parse JSON and flesh out clases here?
-  Future<Foods> fetchFood() async {
+  Future<FoodSuper> fetchFood() async {
     await DotEnv.load(fileName: ".env");
+    var apiKey = DotEnv.env['SUPER_SECRET_API_KEY'];
 
-    final response = await http.get(
-      Uri.parse('https://api.nal.usda.gov/fdc/v1/food/${barcode}?'),
-      headers: {
-        HttpHeaders.authorizationHeader: "${DotEnv.env}",
-      },
-    );
+    final response = await http.get(Uri.parse(
+        'https://api.nal.usda.gov/fdc/v1/food/' +
+            this.widget.upcCode! +
+            apiKey!));
 
-    final responseJson = jsonDecode(response.body);
-    return Foods.fromJson(responseJson);
+    final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    log(responseJson.toString());
+    return FoodSuper.fromJson(responseJson);
   }
 
   void initState() {
@@ -91,51 +89,62 @@ class _FoodItemPageState extends State<FoodItemPage> {
     futureFoods = fetchFood();
   }
 
-  Widget _buildFoodItem() {
+  Widget _buildFoodItem(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FutureBuilder<Foods>(
-                future: futureFoods,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data!.name);
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-                  return const CircularProgressIndicator();
-                },
-              )
-            ],
-          )
+          FutureBuilder<FoodSuper>(
+            future: futureFoods,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data!.foods.toString());
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
+          ),
         ]));
   }
 }
 
 //Class to contain the "Food Item"
-class Foods {
-  String name = '';
-  int upc = 0;
-  List<FoodNutrients> foodNutrient = null as List<FoodNutrients>;
+class FoodSuper {
+  List<Foods> foods;
 
-  Foods({
-    required this.name,
-    required this.upc,
-    required this.foodNutrient,
-  });
+  FoodSuper({required this.foods});
+
+  factory FoodSuper.fromJson(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['foods'] as List;
+
+    List<Foods> foodsList = list.map((i) => Foods.fromJson(i)).toList();
+
+    return FoodSuper(
+      foods: foodsList,
+    );
+  }
+}
+
+class Foods {
+  String description;
+  String gtinUpc;
+  List<FoodNutrients> foodNutrients;
+
+  Foods(
+      {required this.description,
+      required this.gtinUpc,
+      required this.foodNutrients});
 
   factory Foods.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['images'] as List;
-    List<FoodNutrients> nutrientsList =
+    var list = parsedJson['foodNutrients'] as List;
+
+    List<FoodNutrients> foodNutrientsList =
         list.map((i) => FoodNutrients.fromJson(i)).toList();
 
     return Foods(
-      name: parsedJson['description'],
-      upc: parsedJson['gtinUpc'],
-      foodNutrient: nutrientsList,
+      description: parsedJson['id'],
+      gtinUpc: parsedJson['imageName'],
+      foodNutrients: foodNutrientsList,
     );
   }
 }
@@ -144,7 +153,7 @@ class Foods {
 class FoodNutrients {
   int nutrientID = 0;
   String nutrientName = '';
-  int nutrientValue = 0;
+  double nutrientValue = 0;
 
   FoodNutrients({
     required this.nutrientID,
