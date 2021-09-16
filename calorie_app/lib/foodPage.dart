@@ -26,7 +26,7 @@ class _FoodItemPageState extends State<FoodItemPage> {
     return Scaffold(
       appBar: AppBar(
         //this line throws unexpected null value
-        title: Text("Recipe Page"),
+        title: Text(this.widget.upcCode!),
       ),
       drawer: _buildDrawer(context),
       body: _buildFoodItem(context),
