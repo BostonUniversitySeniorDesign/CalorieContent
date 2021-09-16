@@ -25,11 +25,57 @@ class _RecipePageState extends State<RecipePage> {
         //this line throws unexpected null value
         title: Text('Recipe Page'),
       ),
-      drawer: _buildDrawer(),
+      drawer: Container(
+          height: 600,
+          width: 150,
+          child: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Container(
+                    height: 100,
+                    width: 10,
+                    child: DrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        child: Text(
+                          'Navigation',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.5,
+                              height: 0.3),
+                        ))),
+                ListTile(
+                  title: const Text('Home'),
+                  onTap: () {
+                    // Update the state of the app
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHome()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Saved Recipes'),
+                  onTap: () {
+                    // Update the state of the app
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => RecipePage()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          )),
       body: _buildBody(), //this will be changed
     );
   }
 
+/*
   Widget _buildDrawer() {
     return Drawer(
       child: ListView(
@@ -37,7 +83,7 @@ class _RecipePageState extends State<RecipePage> {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.red,
             ),
             child: null,
           ),
@@ -65,7 +111,7 @@ class _RecipePageState extends State<RecipePage> {
       ),
     );
   }
-
+*/
   //flesh out with item grid list
   Widget _buildBody() {
     return Container();

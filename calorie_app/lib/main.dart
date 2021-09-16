@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'recipePage.dart';
 import 'qrPage.dart';
 
-void main() => runApp(MaterialApp(home: MyHome()));
+void main() => runApp(MaterialApp(
+    home: MyHome(),
+    theme: ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Colors.red[800],
+      canvasColor: Colors.transparent,
+    )));
 
 class MyHome extends StatelessWidget {
   const MyHome({Key? key}) : super(key: key);
@@ -26,49 +32,66 @@ class MyHome extends StatelessWidget {
                 ),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.blueAccent,
+                  color: Colors.red,
                   width: 6,
                 )),
           ),
-          Text(
-            'Welcome! Get Started by scanning a barcode with the camera button!',
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              'Get Started by scanning a barcode with the camera button!',
+            ),
           ),
         ],
       )),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: null,
+      drawer: Container(
+          height: 600,
+          width: 150,
+          child: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Container(
+                    height: 100,
+                    width: 10,
+                    child: DrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        child: Text(
+                          'Navigation',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.5,
+                              height: 0.3),
+                        ))),
+                ListTile(
+                  title: const Text('Home'),
+                  onTap: () {
+                    // Update the state of the app
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHome()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Saved Recipes'),
+                  onTap: () {
+                    // Update the state of the app
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => RecipePage()),
+                    );
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              title: const Text('Home'),
-              onTap: () {
-                // Update the state of the app
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHome()),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Saved Recipes'),
-              onTap: () {
-                // Update the state of the app
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => RecipePage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+          )),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => QRScan(),

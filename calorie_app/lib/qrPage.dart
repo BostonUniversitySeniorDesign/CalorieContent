@@ -56,6 +56,8 @@ class _QRScanState extends State<QRScan> {
                               await controller?.toggleFlash();
                               setState(() {});
                             },
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
@@ -70,6 +72,8 @@ class _QRScanState extends State<QRScan> {
                               await controller?.flipCamera();
                               setState(() {});
                             },
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.red),
                             child: FutureBuilder(
                               future: controller?.getCameraInfo(),
                               builder: (context, snapshot) {
@@ -94,26 +98,37 @@ class _QRScanState extends State<QRScan> {
                           onPressed: () async {
                             await controller?.pauseCamera();
                           },
-                          child: Text('pause', style: TextStyle(fontSize: 20)),
+                          child: Text(
+                            'pause',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                          ),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.all(8),
                         child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: Text('resume', style: TextStyle(fontSize: 20)),
-                        ),
+                            onPressed: () async {
+                              await controller?.resumeCamera();
+                            },
+                            child:
+                                Text('resume', style: TextStyle(fontSize: 20)),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red,
+                            )),
                       ),
                       Container(
                           margin: EdgeInsets.all(8),
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Back'),
-                          ))
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Back'),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.red,
+                              )))
                     ],
                   ),
                 ],
