@@ -75,15 +75,15 @@ Last week of the project, plans for week of 9/13
 * Passing data between stateful widgets in Dart: https://medium.com/flutter-community/parsing-complex-json-in-flutter-747c46655f51
 
 ## Images
-* ![Android Home Page](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_home.png?raw=true)
+* ![Android Home Page](https://github.com/derekbarbosa/CalorieContent/blob/main/images/Android/Android_home.png)
 * The Android Home Page
-* ![Android Drawer Widget](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_Drawer.png?raw=true)
+* ![Android Drawer Widget](https://github.com/derekbarbosa/CalorieContent/blob/main/images/Android/Android_Drawer.png)
 * The Android Drawer Widget
-* ![Android Scan Page](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_Scan.png?raw=true)
+* ![Android Scan Page](https://github.com/derekbarbosa/CalorieContent/blob/main/images/Android/Android_Scan.png)
 * The Android Scan Page
-* ![Android Response](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_response.png?raw=true)
+* ![Android Response](https://github.com/derekbarbosa/CalorieContent/blob/main/images/Android/Android_response.png)
 * The Android Response page (food item)
-* ![Android Recipe Page](https://github.com/derekbarbosa/CalorieContent/blob/main/android_recipe.png?raw=true)
+* ![Android Recipe Page](https://github.com/derekbarbosa/CalorieContent/blob/main/images/Android/android_recipe.png)
 * The Android Recipe Page (unfinished, where saved foods would go).
 
 
