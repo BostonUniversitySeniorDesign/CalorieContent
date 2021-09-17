@@ -75,43 +75,6 @@ class _RecipePageState extends State<RecipePage> {
     );
   }
 
-/*
-  Widget _buildDrawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.red,
-            ),
-            child: null,
-          ),
-          ListTile(
-            title: const Text('Home'),
-            onTap: () {
-              // Update the state of the app
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyHome()),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('Saved Recipes'),
-            onTap: () {
-              // Update the state of the app
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => RecipePage()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-*/
   //flesh out with item grid list
   Widget _buildBody() {
     return Container();

@@ -113,10 +113,10 @@ class _FoodItemPageState extends State<FoodItemPage> {
 }
 
 class Foods {
-  final int fdcId;
+  final num fdcId;
   final String description;
   final String gtinUpc;
-  final int calories;
+  final num calories;
 
   Foods({
     required this.fdcId,
@@ -128,8 +128,8 @@ class Foods {
   factory Foods.fromJson(Map<String, dynamic> parsedJson) {
     final description = parsedJson['foods'][0]['description'] as String;
     final gtinUpc = parsedJson['foods'][0]['gtinUpc'] as String;
-    final fdcId = parsedJson['foods'][0]['fdcId'] as int;
-    final calories = parsedJson['foods'][0]['foodNutrients'][3]['value'] as int;
+    final fdcId = parsedJson['foods'][0]['fdcId'] as num;
+    final calories = parsedJson['foods'][0]['foodNutrients'][3]['value'] as num;
 
     return Foods(
       calories: calories,
