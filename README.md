@@ -75,3 +75,17 @@ Last week of the project, plans for week of 9/13
 * Passing data between stateful widgets in Dart: https://medium.com/flutter-community/parsing-complex-json-in-flutter-747c46655f51
 
 ## Images
+![Android Home Page](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_home.png?raw=true)
+* The Android Home Page
+![Android Drawer Widget](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_Drawer.png?raw=true)
+* The Android Drawer Widget
+![Android Scan Page](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_Scan.png?raw=true)
+* The Android Scan Page
+![Android Response](https://github.com/derekbarbosa/CalorieContent/blob/main/Android_response.png?raw=true)
+* The Android Response page (food item)
+![Android Recipe Page](https://github.com/derekbarbosa/CalorieContent/blob/main/android_recipe.png?raw=true)
+* The Android Recipe Page (unfinished, where saved foods would go).
+
+
+
+
