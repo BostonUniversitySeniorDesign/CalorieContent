@@ -74,4 +74,4 @@ Last week of the project, plans for week of 9/13
 * Parsing JSON and using classes to organize request data: https://medium.com/flutter-community/parsing-complex-json-in-flutter-747c46655f51
 * Passing data between stateful widgets in Dart: https://medium.com/flutter-community/parsing-complex-json-in-flutter-747c46655f51
 
-##Images
+## Images
