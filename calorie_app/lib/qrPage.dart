@@ -90,35 +90,37 @@ class _QRScanState extends State<QRScan> {
                           margin: EdgeInsets.all(8),
                           color: Colors.red,
                           child: ElevatedButton(
-                            onPressed: () {
-                              DateTime? lastScan;
-                              final currentScan = DateTime.now();
-                              String? upcCode = "";
+                              onPressed: () {
+                                DateTime? lastScan;
+                                final currentScan = DateTime.now();
+                                String? upcCode = "";
 
-                              if (result?.code != null) {
-                                upcCode = result?.code;
-                              }
+                                if (result?.code != null) {
+                                  upcCode = result?.code;
+                                }
 
-                              if (lastScan == null ||
-                                  currentScan.difference(lastScan) >
-                                      const Duration(seconds: 1)) {
-                                lastScan = currentScan;
+                                if (lastScan == null ||
+                                    currentScan.difference(lastScan) >
+                                        const Duration(seconds: 1)) {
+                                  lastScan = currentScan;
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Barcode Scanned!')));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text('Barcode Scanned!')));
 
-                                Navigator.push(
-                                  (context),
-                                  MaterialPageRoute(
-                                      builder: (context) => FoodItemPage(
-                                            upcCode: upcCode,
-                                          )),
-                                );
-                              }
-                            },
-                            child: Text("Save Recipe!"),
-                          ))
+                                  Navigator.push(
+                                    (context),
+                                    MaterialPageRoute(
+                                        builder: (context) => FoodItemPage(
+                                              upcCode: upcCode,
+                                            )),
+                                  );
+                                }
+                              },
+                              child: Text("Save Recipe!"),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.red,
+                              )))
                     ],
                   ),
                   Row(
