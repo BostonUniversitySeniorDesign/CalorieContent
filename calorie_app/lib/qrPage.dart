@@ -88,6 +88,7 @@ class _QRScanState extends State<QRScan> {
                       ),
                       Container(
                           margin: EdgeInsets.all(8),
+                          color: Colors.red,
                           child: ElevatedButton(
                             onPressed: () {
                               DateTime? lastScan;
