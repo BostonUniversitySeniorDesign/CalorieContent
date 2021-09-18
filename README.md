@@ -44,9 +44,9 @@ Figuring out the Flutter learning curve was interesting. For this project, we we
 Looking back, what really ate up most of our time was finding plugins and libraries that were not deprecated. Most tutorials were outdated, and while Google's documentation is stellar, accessing things like Cameras and Filesystems are not documented, leaving difficult tasks like those wholly up to the community to implement. Updating flutter also lead to breaking a lot of plugins that relied on older versions of the SDK. (plenty of conflicting documentation on nullsafety, to boot).
 
 All in all, it was an amazing learning experience when it came to Flutter's approach to Imperative and Declarative UI, as well as interacting with Widgets that are reactive/stateful.
- 
+## LINK TO THE DEMO VIDEO
 ## Sprint Log
-
+https://drive.google.com/file/d/1_OOltljjpfednQ0lDmK_TTc2StQdVOl2/view?usp=sharing
 ### Sprint 1
 Plans for the SPRINT week of 9/7:
 
