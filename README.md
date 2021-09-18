@@ -45,8 +45,8 @@ Looking back, what really ate up most of our time was finding plugins and librar
 
 All in all, it was an amazing learning experience when it came to Flutter's approach to Imperative and Declarative UI, as well as interacting with Widgets that are reactive/stateful.
 ## LINK TO THE DEMO VIDEO
-## Sprint Log
 https://drive.google.com/file/d/1_OOltljjpfednQ0lDmK_TTc2StQdVOl2/view?usp=sharing
+## Sprint Log
 ### Sprint 1
 Plans for the SPRINT week of 9/7:
 
